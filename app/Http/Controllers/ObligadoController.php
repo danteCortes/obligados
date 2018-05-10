@@ -25,7 +25,6 @@ class ObligadoController extends Controller{
       foreach ($results as $clave => $valor) {
         $ruc = $valor['ruc'];
         $usuarioSunat = UsuarioSunat::where('ruc', $ruc)->first();
-
         if($usuarioSunat){
           if ($usuarioSunat->ubigeo != "-" && $usuarioSunat->ubigeo != "--" && $usuarioSunat->ubigeo != "---" && $usuarioSunat->ubigeo != "----") {
             $dpto = substr($usuarioSunat->ubigeo, '0', 2);
