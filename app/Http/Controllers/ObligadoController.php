@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+Use App\UsuarioSunat;
 
 class ObligadoController extends Controller{
 
@@ -18,7 +19,11 @@ class ObligadoController extends Controller{
 
       $results = $reader->get();
       foreach ($results as $clave => $valor) {
-        echo "clave=>".$clave." valor=>".$valor['ruc']."<br>";
+        $ruc = $valor['ruc'];
+        $usuarioSunat = UsuarioSunat::where('ruc', $ruc)->first();
+        if($usuarioSunat){
+          echo "ruc=>".$valor['ruc']." Razón Social=>".$usuarioSunat->razon."<br>";
+        }
       }
       
   
