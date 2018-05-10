@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 Use App\UsuarioSunat;
+use DB;
 
 class ObligadoController extends Controller{
 
@@ -22,17 +23,58 @@ class ObligadoController extends Controller{
         $ruc = $valor['ruc'];
         $usuarioSunat = UsuarioSunat::where('ruc', $ruc)->first();
         if($usuarioSunat){
-          echo "ruc=>".$valor['ruc']." Razón Social=>".$usuarioSunat->razon."<br>";
+          $razon_social = $usuarioSunat->razon;
+          $direccion = $this->direccion($usuarioSunat);
+          echo "ruc=>".$valor['ruc']." Razón Social=>".$razon_social." Dirección=>".$direccion."<br>";
         }
       }
       
   
     });
-    
-  
+  }
 
-    
-
+  private function direccion($usuarioSunat){
+    $direccion = "";
+    if ($usuarioSunat->tipo_via != "-" && $usuarioSunat->tipo_via != "--" && $usuarioSunat->tipo_via != "---" && $usuarioSunat->tipo_via != "----") {
+      $direccion .= $usuarioSunat->tipo_via." ";
+    }
+    if ($usuarioSunat['nombre_via'] != "-" && $usuarioSunat['nombre_via'] != "--" && $usuarioSunat['nombre_via'] != "---" && $usuarioSunat['nombre_via'] != "----") {
+      $direccion .= $usuarioSunat['nombre_via']." ";
+    }
+    if ($usuarioSunat['numero'] != "-" && $usuarioSunat['numero'] != "--" && $usuarioSunat['numero'] != "---" && $usuarioSunat['numero'] != "----") {
+      $direccion .= "NRO. ".$usuarioSunat['numero']." ";
+    }
+    if ($usuarioSunat['interior'] != "-" && $usuarioSunat['interior'] != "--" && $usuarioSunat['interior'] != "---" && $usuarioSunat['interior'] != "----") {
+      $direccion .= "INT. ".$usuarioSunat['interior']." ";
+    }
+    if ($usuarioSunat['zona'] != "-" && $usuarioSunat['zona'] != "--" && $usuarioSunat['zona'] != "---" && $usuarioSunat['zona'] != "----") {
+      $direccion .= $usuarioSunat['zona']." ";
+    }
+    if ($usuarioSunat['tipo_zona'] != "-" && $usuarioSunat['tipo_zona'] != "--" && $usuarioSunat['tipo_zona'] != "---" && $usuarioSunat['tipo_zona'] != "----") {
+      $direccion .= $usuarioSunat['tipo_zona']." ";
+    }
+    if ($usuarioSunat['manzana'] != "-" && $usuarioSunat['manzana'] != "--" && $usuarioSunat['manzana'] != "---" && $usuarioSunat['manzana'] != "----") {
+      $direccion .= "MZ. ".$usuarioSunat['manzana']." ";
+    }
+    if ($usuarioSunat['lote'] != "-" && $usuarioSunat['lote'] != "--" && $usuarioSunat['lote'] != "---" && $usuarioSunat['lote'] != "----") {
+      $direccion .= "LTE. ".$usuarioSunat['lote']." ";
+    }
+    if (trim($usuarioSunat['departamento']) != "-" && $usuarioSunat['departamento'] != "--" && $usuarioSunat['departamento'] != "---" && $usuarioSunat['departamento'] != "----") {
+      $direccion .= "DPTO. ".$usuarioSunat['departamento']." ";
+    }
+    if ($usuarioSunat['kilometro'] != "-" && $usuarioSunat['kilometro'] != "--" && $usuarioSunat['kilometro'] != "---" && $usuarioSunat['kilometro'] != "----") {
+      $direccion .= "KM. ".$usuarioSunat['kilometro']." ";
+    }
+    if ($usuarioSunat['ubigeo'] != "-" && $usuarioSunat['ubigeo'] != "--" && $usuarioSunat['ubigeo'] != "---" && $usuarioSunat['ubigeo'] != "----") {
+      $dpto = substr($usuarioSunat['ubigeo'], '0', 2);
+      $prov = substr($usuarioSunat['ubigeo'], '2', 2);
+      $dist = substr($usuarioSunat['ubigeo'], '4', 2);
+      $dist = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', $prov)->where('CodDist', '=', $dist)->first();
+      $prov = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', $prov)->where('CodDist', '=', '0')->first();
+      $dpto = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', '0')->where('CodDist', '=', '0')->first();
+      $direccion .= $dist->Nombre." - ".$prov->Nombre." - ".$dpto->Nombre;
+    }
+    return $direccion;
   }
   
 
