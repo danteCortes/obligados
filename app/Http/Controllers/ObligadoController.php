@@ -17,7 +17,6 @@ class ObligadoController extends Controller{
   public function buscar(Request $request){dd($request);
 
     $archivo = $request->file('obligados')->storeAs('obligados', 'obligados.xlsx', 'archivos');
-    
 
     \Excel::load('public/archivos/obligados/obligados.xlsx', function($reader) {
 
@@ -28,18 +27,13 @@ class ObligadoController extends Controller{
         if($usuarioSunat){
           if ($usuarioSunat->ubigeo != "-" && $usuarioSunat->ubigeo != "--" && $usuarioSunat->ubigeo != "---" && $usuarioSunat->ubigeo != "----") {
             $dpto = substr($usuarioSunat->ubigeo, '0', 2);
-            $prov = substr($usuarioSunat->ubigeo, '2', 2);
-            $dist = substr($usuarioSunat->ubigeo, '4', 2);
-            
-            $dist = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', $prov)->where('CodDist', '=', $dist)->first();
-            $prov = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', $prov)->where('CodDist', '=', '0')->first();
-            $dpto = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', '0')->where('CodDist', '=', '0')->first();
-            $direccion = $dist->Nombre." - ".$prov->Nombre." - ".$dpto->Nombre;
+            if($dpto == '10'){
+              $razon_social = $usuarioSunat->razon;
+              $direccion = $this->direccion($usuarioSunat);
+              $array = ['ruc'=>$ruc, 'razon'=>$razon_social, 'direccion'=>$direccion];
+              $this->agregarUsuario($array);
+            }
           }
-          $razon_social = $usuarioSunat->razon;
-          $direccion = $this->direccion($usuarioSunat);
-          $array = ['ruc'=>$ruc, 'razon'=>$razon_social, 'direccion'=>$direccion];
-          $this->agregarUsuario($array);
         }
       }
     });
@@ -104,7 +98,6 @@ class ObligadoController extends Controller{
 
   private function agregarUsuario(array $array){
     array_push($this->obligados, $array);
-    
   }
   
 
