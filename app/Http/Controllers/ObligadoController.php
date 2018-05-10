@@ -15,8 +15,7 @@ class ObligadoController extends Controller{
   }
 
   public function buscar(Request $request){
-
-    $archivo = $request->file('obligados')->storeAs('obligados', 'obligados.xlsx', 'archivos');
+    set_time_limit(0);
 
     \Excel::load('public/archivos/obligados/obligados.xlsx', function($reader) {
 

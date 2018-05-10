@@ -7,8 +7,7 @@
   <title>Subir Archivo Excel</title>
 </head>
 <body>
-  {!!Form::open(['url'=>'buscar', 'files'=>true])!!}
-    <input type="file" name="obligados" required><br>
+  {!!Form::open(['url'=>'buscar'])!!}
     <button type="submit">Subir y Buscar</button>
   {!!Form::close()!!}
 </body>
