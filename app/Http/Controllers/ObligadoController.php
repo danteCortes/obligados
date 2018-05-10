@@ -23,6 +23,15 @@ class ObligadoController extends Controller{
         $ruc = $valor['ruc'];
         $usuarioSunat = UsuarioSunat::where('ruc', $ruc)->first();
         if($usuarioSunat){
+          if ($usuarioSunat->ubigeo != "-" && $usuarioSunat->ubigeo != "--" && $usuarioSunat->ubigeo != "---" && $usuarioSunat->ubigeo != "----") {
+            $dpto = substr($usuarioSunat->ubigeo, '0', 2);
+            $prov = substr($usuarioSunat->ubigeo, '2', 2);
+            $dist = substr($usuarioSunat->ubigeo, '4', 2);echo $dpto."-".$prov."-".$dist;
+            /* $dist = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', $prov)->where('CodDist', '=', $dist)->first();
+            $prov = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', $prov)->where('CodDist', '=', '0')->first();
+            $dpto = DB::table('webs_ubigeo')->where('CodDpto', '=', $dpto)->where('CodProv', '=', '0')->where('CodDist', '=', '0')->first();
+            $direccion = $dist->Nombre." - ".$prov->Nombre." - ".$dpto->Nombre; */
+          }
           $razon_social = $usuarioSunat->razon;
           $direccion = $this->direccion($usuarioSunat);
           echo "ruc=>".$valor['ruc']." Razón Social=>".$razon_social." Dirección=>".$direccion."<br>";
