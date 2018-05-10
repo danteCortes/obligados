@@ -64,7 +64,7 @@ class ObligadoController extends Controller{
     }
     if ($usuarioSunat['kilometro'] != "-" && $usuarioSunat['kilometro'] != "--" && $usuarioSunat['kilometro'] != "---" && $usuarioSunat['kilometro'] != "----") {
       $direccion .= "KM. ".$usuarioSunat['kilometro']." ";
-    }
+    }return $direccion;
     if ($usuarioSunat['ubigeo'] != "-" && $usuarioSunat['ubigeo'] != "--" && $usuarioSunat['ubigeo'] != "---" && $usuarioSunat['ubigeo'] != "----") {
       $dpto = substr($usuarioSunat['ubigeo'], '0', 2);
       $prov = substr($usuarioSunat['ubigeo'], '2', 2);
